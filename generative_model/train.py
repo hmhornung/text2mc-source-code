@@ -16,7 +16,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 from sklearn.metrics import precision_score, recall_score, f1_score
 
-batch_size = 2
+batch_size = 6
 num_epochs = 256
 fixed_size = (64, 64, 64)
 embedding_dim = 32
