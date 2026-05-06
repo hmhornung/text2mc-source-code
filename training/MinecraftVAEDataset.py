@@ -11,26 +11,25 @@ sys.path.insert(0, '../../data_processing/palette/')
 from palette import Palette
 
 
-class CustomImageDataset(Dataset):
+class MinecraftVAEDataset(Dataset):
     def __init__(self, data_path:str):
-        sample_
         self.block_dist_df = pd.read_csv(os.path.join(data_path, 'block_dist_dataframe.csv'))
         self.sample_dims_df = pd.read_csv(os.path.join(data_path, 'sample_dims_dataframe.csv'))
+
+        sample_files = os.listdir(os.path.join(data_path, 'samples/'))
+        sample_names = self.sample_dims_df["Sample"].list()
+        
         
         with open(os.path.join(data_path, 'block2token.json')) as f:
             self.block2token = json.load(f)
         
-        self.palette = Palette
-
+        self.palette = Palette(self.block2token)
+    
     def __len__(self):
         return len(self.img_labels)
 
     def __getitem__(self, idx):
-        img_path = os.path.join(self.img_dir, self.img_labels.iloc[idx, 0])
-        image = decode_image(img_path)
-        label = self.img_labels.iloc[idx, 1]
-        if self.transform:
-            image = self.transform(image)
-        if self.target_transform:
-            label = self.target_transform(label)
-        return image, label
+        pass
+
+    def _transform(self, sample_arr, flip:bool, rotate:int):
+        pass
