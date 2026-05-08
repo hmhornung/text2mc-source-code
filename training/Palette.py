@@ -52,7 +52,6 @@ class Palette:
         lookups = self._generate_transformation_lookups()
         self.transform_lookup = self.TransformLookup(*lookups)
         
-        
     def reduce_blockstates(self, keep_blockstates: list, block_ids=None) -> tuple["Palette", np.ndarray, np.ndarray]:
         reduced_block2tok = {}
         reduced_gdpc_blocks = []
@@ -107,7 +106,7 @@ class Palette:
                     mask_arr[self.block2token[block_str]] = True
         
         # Map all masked tokens to the air token
-        src2mask = np.arange(self.length, dtype=np.int32)
+        src2mask = np.arange(self.length, dtype=np.int16)
         src2mask[mask_arr] = air_token
         
         return src2mask
