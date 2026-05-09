@@ -14,8 +14,9 @@ from gdpc import Block
 from gdpc.block import transformedBlockOrPalette
 import itertools
 
-class Palette:
-    
+TransformLookup = namedtuple('TransformLookup', ['rot0', 'rot0flip', 'rot90', 'rot90flip', 'rot180', 'rot180flip', 'rot270', 'rot270flip'])
+
+class Palette:    
     def __init__(self, src: str | dict | list):
         # Get the block to token mapping
         if isinstance(src, str):
@@ -48,9 +49,8 @@ class Palette:
         
         self._add_missing_transformations()
         
-        self.TransformLookup = namedtuple('TransformLookup', ['rot0', 'rot0flip', 'rot90', 'rot90flip', 'rot180', 'rot180flip', 'rot270', 'rot270flip'])
         lookups = self._generate_transformation_lookups()
-        self.transform_lookup = self.TransformLookup(*lookups)
+        self.transform_lookup = TransformLookup(*lookups)
         
     def reduce_blockstates(self, keep_blockstates: list, block_ids=None) -> tuple["Palette", np.ndarray, np.ndarray]:
         reduced_block2tok = {}
@@ -166,4 +166,16 @@ class Palette:
     
     def __len__(self):
         return self.length
+    
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["gdpc_blocks"] = [str(b) for b in self.gdpc_blocks]
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.gdpc_blocks = [
+            self._blockstr_to_gdpc_block(s)
+            for s in self.gdpc_blocks
+        ]
     

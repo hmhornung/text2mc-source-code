@@ -33,9 +33,12 @@ class MinecraftVAEDataset(Dataset):
         self.precision = precision
         
         self.sample_dims_df = pd.read_csv(os.path.join(data_path, 'sample_dims_df.csv'))
-
+        self.exclude_samples = self.sample_dims_df[self.sample_dims_df["volume"] < 100]["Sample"].tolist()
+        self.exclude_samples = [sample + '.npy' for sample in self.exclude_samples]
+        self.sample_names = [sample for sample in self.sample_names if sample not in self.exclude_samples]
+        
         self.sample_dir = os.path.join(data_path, 'samples/')
-        self.sample_names = self.sample_dims_df["Sample"].tolist()
+        # self.sample_names = self.sample_dims_df["Sample"].tolist()
         self.token2vector = np.load(os.path.join(data_path, "token2vector.npy")).astype(self.precision)
         self.emb2game = np.load(os.path.join(data_path, "emb2game_lookup.npy"))
         
@@ -64,14 +67,6 @@ class MinecraftVAEDataset(Dataset):
             blocks, counts = np.unique(no_bs_arr, return_counts=True)
             self.block_counts[blocks] += counts
         
-        print(f"done loading dataset")
-        ram = psutil.virtual_memory()
-
-        # Print relevant info
-        print(f"Total RAM: {ram.total / 1e9:.2f} GB")
-        print(f"Used RAM: {ram.used / 1e9:.2f} GB")
-        print(f"RAM Usage (%): {ram.percent}%\n")
-              
         self.rand_aug = True
         self.weighted_sampling = True
         self._heatmaps_created = False
@@ -160,14 +155,6 @@ class MinecraftVAEDataset(Dataset):
             blocks, counts = np.unique(no_bs_arr, return_counts=True)
             self.block_counts[blocks] += counts
         
-        print('done with masking dataset')
-        ram = psutil.virtual_memory()
-
-        # Print relevant info
-        print(f"Total RAM: {ram.total / 1e9:.2f} GB")
-        print(f"Used RAM: {ram.used / 1e9:.2f} GB")
-        print(f"RAM Usage (%): {ram.percent}%\n")
-            
         # Re-calculate the block densities and heatmaps:
         self.block_densities = np.log( 1 + (self.block_counts.sum() / (self.block_counts + 1)) ).astype(np.float16)
         self.block_densities[self.palette_no_blockstate.block2token["minecraft:air"]] = 1e-3
@@ -175,13 +162,6 @@ class MinecraftVAEDataset(Dataset):
         for sample in self.samples:
             self.heatmaps.append(self.block_densities[self.bs_src2tgt[sample]].astype(np.float16))
         
-        print('done with heatmaps dataset')
-        ram = psutil.virtual_memory()
-
-        # Print relevant info
-        print(f"Total RAM: {ram.total / 1e9:.2f} GB")
-        print(f"Used RAM: {ram.used / 1e9:.2f} GB")
-        print(f"RAM Usage (%): {ram.percent}%\n")
         self._heatmaps_created = True
     
     def plot_block_occurences(self):
