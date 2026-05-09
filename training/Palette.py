@@ -1,12 +1,8 @@
-import amulet
 import os
 import sys
 import json
 import numpy as np
 import pandas as pd
-from amulet import load_level
-from amulet_nbt import load
-from amulet.api.selection import SelectionBox
 from collections import namedtuple
 import re
 import mcschematic
