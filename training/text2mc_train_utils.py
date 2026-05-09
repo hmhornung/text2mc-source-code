@@ -185,7 +185,7 @@ def get_paths_dict(copy_to_node, job_name):
     home_dir = '/fastscratch/hmhornung/spring-2026-hmhornung-minecraftvae/text2mc-source-code/'
 
     # Model weight checkpoints
-    home_train_results_path = os.path.join(home_dir, f'MinecraftVAE_train_results/{job_name}')
+    home_train_results_path = os.path.join(home_dir, f'train_results/{job_name}')
     os.makedirs(home_train_results_path, exist_ok=True)
     checkpoint_path = os.path.join(home_train_results_path, 'checkpoint.pth')
     best_model_path = os.path.join(home_train_results_path, 'best_model.pth')

@@ -463,7 +463,14 @@ def main(save_every: int, total_epochs: int, batch_size: int, checkpoint_path: s
     train_dataset, val_dataset, test_dataset, model, optimizer = load_train_objs()
     train_data = prepare_dataloader(train_dataset, batch_size, shuffle=True)
     val_data = prepare_dataloader(val_dataset, batch_size)
-    trainer = Trainer(model, train_data, val_data, train_dataset.air_token, optimizer, save_every, checkpoint_path, home_checkpoint_path)
+    trainer = Trainer(model,
+                      train_data,
+                      val_data,
+                      train_dataset.block2token["minecraft:air"],
+                      optimizer,
+                      save_every,
+                      checkpoint_path,
+                      home_checkpoint_path)
     trainer.train(total_epochs)
     destroy_process_group()
     print('did trainer.destroy_process_group')
