@@ -17,14 +17,6 @@ from util import array_to_schematic
 class MinecraftVAEDataset(Dataset):
     def __init__(self, data_path:str, sample_names:list, dims:tuple=(32,32,32), mask_threshold:int=0, precision:np.dtype=np.float64):
         # Load necessary files and data
-        print('started making dataset')
-        ram = psutil.virtual_memory()
-
-        # Print relevant info
-        print(f"Total RAM: {ram.total / 1e9:.2f} GB")
-        print(f"Used RAM: {ram.used / 1e9:.2f} GB")
-        print(f"RAM Usage (%): {ram.percent}%\n")
-        
         self.data_path = data_path
         self.sample_names = sample_names
         self.mask_threshold = mask_threshold
