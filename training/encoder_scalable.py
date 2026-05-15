@@ -133,31 +133,44 @@ class text2mcVAEResidualBlock(nn.Module):
         return x + self.residual_layer(residue)
     
 class text2mcVAEEncoder(nn.Module):
-    def __init__(self, embedding_dim=32):
+    def __init__(self, embedding_dim:int=32, scale:int=3, latent_size:int=8):
         super().__init__()
+        assert scale > 0
+        
         self.embedding_dim = embedding_dim
         self.positional_encoding = PositionalEncoding3D(embedding_dim)
+        init_channels = 2 ** scale
+        
+        initial_layers_list = []
+        if scale > 1:
+            initial_layers_list += [
+                nn.Conv3d(embedding_dim, init_channels*8, kernel_size=3, padding=1),
+                nn.GroupNorm(16, init_channels*8),
+                nn.SiLU()
+            ]
+            initial_conv_channels = init_channels*8
+        else:
+            initial_conv_channels = embedding_dim
 
-        self.initial_layers = nn.Sequential(
-            nn.Conv3d(embedding_dim, 64, kernel_size=3, padding=1),
-            nn.GroupNorm(16, 64),
-            nn.SiLU(),
-            nn.Conv3d(64, 128, kernel_size=3, stride=2, padding=1),
-            nn.GroupNorm(32, 128),
-            nn.SiLU(),
-            text2mcVAEResidualBlock(128, 256),
-            text2mcVAEResidualBlock(256, 256),
-            nn.Conv3d(256, 512, kernel_size=3, stride=2, padding=1),
-            text2mcVAEResidualBlock(512, 512),
-            text2mcVAEResidualBlock(512, 512),
-            AxialAttentionBlock3D(512),
-            text2mcVAEResidualBlock(512, 1024),
-            nn.Conv3d(1024, 1024, kernel_size=3, stride=2, padding=1),
-            text2mcVAEResidualBlock(1024, 1024),
-        )
-        self.groupnorm = nn.GroupNorm(32, 1024)
-        self.mu_conv = nn.Conv3d(1024, 8, kernel_size=3, padding=1)
-        self.logvar_conv = nn.Conv3d(1024, 8, kernel_size=3, padding=1)
+        initial_layers_list += [
+                nn.Conv3d(initial_conv_channels, init_channels*16, kernel_size=3, stride=2, padding=1),
+                nn.GroupNorm(32, init_channels*16),
+                nn.SiLU(),
+                text2mcVAEResidualBlock(init_channels*16, init_channels*32),
+                text2mcVAEResidualBlock(init_channels*32, init_channels*32),
+                nn.Conv3d(init_channels*32, init_channels*64, kernel_size=3, stride=2, padding=1),
+                text2mcVAEResidualBlock(init_channels*64, init_channels*64),
+                text2mcVAEResidualBlock(init_channels*64, init_channels*64),
+                AxialAttentionBlock3D(init_channels*64),
+                text2mcVAEResidualBlock(init_channels*64, init_channels*128),
+                nn.Conv3d(init_channels*128, init_channels*128, kernel_size=3, stride=2, padding=1),
+                text2mcVAEResidualBlock(init_channels*128, init_channels*128),
+            ]
+
+        self.initial_layers = nn.Sequential(*initial_layers_list)
+        self.groupnorm = nn.GroupNorm(32, init_channels*128)
+        self.mu_conv = nn.Conv3d(init_channels*128, latent_size, kernel_size=3, padding=1)
+        self.logvar_conv = nn.Conv3d(init_channels*128, latent_size, kernel_size=3, padding=1)
 
     def reparameterize(self, mu, logvar):
         std = torch.exp(0.5 * logvar)

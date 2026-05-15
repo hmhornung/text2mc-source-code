@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 345, in <module>
+    main(1, batch_size, paths["checkpoint_path"], paths["checkpoint_path"], fixed_size, mask_threshold, num_workers, prefetch_factor, lr, epochs)
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 316, in main
+    trainer.train()
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 78, in train
+    self._run_epoch(epoch)
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 100, in _run_epoch
+    overall_loss, reconstruction_loss, bce_loss, KL_divergence, block_air_pred = self._run_batch(data, data_tokens, train=True)
+                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 195, in _run_batch
+    return overall_loss.item(), reconstruction_loss.item(), bce_loss.item(), KL_divergence.item(), block_air_pred
+           ^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 346, in <module>
+    main(1, batch_size, paths["checkpoint_path"], paths["checkpoint_path"], fixed_size, mask_threshold, num_workers, prefetch_factor, lr, epochs)
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 317, in main
+    trainer.train()
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 78, in train
+    self._run_epoch(epoch)
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 100, in _run_epoch
+    overall_loss, reconstruction_loss, bce_loss, KL_divergence, block_air_pred = self._run_batch(data, data_tokens, train=True)
+                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\text2mc-source-code\training\train_ddp_torchrun_local.py", line 193, in _run_batch
+    self.optimizer.step()
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\.venv_local\Lib\site-packages\torch\optim\optimizer.py", line 517, in wrapper
+    out = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\.venv_local\Lib\site-packages\torch\optim\optimizer.py", line 82, in _use_grad
+    ret = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\.venv_local\Lib\site-packages\torch\optim\adam.py", line 247, in step
+    adam(
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\.venv_local\Lib\site-packages\torch\optim\optimizer.py", line 150, in maybe_fallback
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\.venv_local\Lib\site-packages\torch\optim\adam.py", line 953, in adam
+    func(
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\.venv_local\Lib\site-packages\torch\optim\adam.py", line 759, in _multi_tensor_adam
+    1 - beta1 ** _get_value(step) for step in device_state_steps
+                 ^^^^^^^^^^^^^^^^
+  File "H:\Projects\spring-2026-hmhornung-MinecraftVAE\.venv_local\Lib\site-packages\torch\optim\optimizer.py", line 97, in _get_value
+    return x.item() if isinstance(x, torch.Tensor) else x
+           ^^^^^^^^
+KeyboardInterrupt

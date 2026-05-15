@@ -5,7 +5,7 @@ from torch import nn
 from torch.nn import functional as F
 
 # Reuse AxialAttentionBlock3D and text2mcVAEResidualBlock from encoder.py
-from encoder import AxialAttentionBlock3D, text2mcVAEResidualBlock
+from encoder_scalable import AxialAttentionBlock3D, text2mcVAEResidualBlock
 
 class text2mcVAEDecoder(nn.Module):
     def __init__(self, embedding_dim=32):

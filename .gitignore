@@ -12,3 +12,4 @@ block2vec/lightning_logs/
 world2vec/worlds/
 world2vec/testbuilds/
 world2vec/__pycache__/
+train_results/**/*.pth

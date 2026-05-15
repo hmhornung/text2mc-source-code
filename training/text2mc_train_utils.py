@@ -180,9 +180,13 @@ def block_air_metrics(block_air_pred, data_tokens, air_token_id):
 
     return accuracy, precision, recall, f1
 
-def get_paths_dict(copy_to_node, job_name):
+def get_paths_dict(copy_to_node, job_name, local=False):
     # Get paths to home directory, regardless of if we're copying the project onto the node's disk
-    home_dir = '/fastscratch/hmhornung/spring-2026-hmhornung-minecraftvae/text2mc-source-code/'
+    if not local:
+        home_dir = '/fastscratch/hmhornung/spring-2026-hmhornung-minecraftvae/text2mc-source-code/'
+    else:
+        home_dir = 'H:/Projects/spring-2026-hmhornung-MinecraftVAE/'
+        
 
     # Model weight checkpoints
     home_train_results_path = os.path.join(home_dir, f'train_results/{job_name}')

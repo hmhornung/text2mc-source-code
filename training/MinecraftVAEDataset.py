@@ -73,6 +73,9 @@ class MinecraftVAEDataset(Dataset):
         if self.weighted_sampling:
             center = self._weighted_random_coordinate(self.heatmaps[idx])
             sample = self._get_window(sample, center)
+        else:
+            center = [random.randrange(0,n) for n in sample.shape]
+            sample = self._get_window(sample, center)
             
         if self.rand_aug:
             rotate = random.randint(0, 3)
@@ -174,5 +177,7 @@ class MinecraftVAEDataset(Dataset):
         
     
 def collate_fn(batch):
-    return torch.tensor(np.stack([x["emb"] for x in batch])), torch.tensor(np.stack([x["tok"] for x in batch]))
+    embed = torch.tensor(np.stack([x["emb"] for x in batch])).permute(0,4,1,2,3)
+    tokens = torch.tensor(np.stack([x["tok"] for x in batch]))
+    return embed, tokens
     
